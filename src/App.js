@@ -14,7 +14,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container main-container h-100 my-auto">
+      <div className="container main-container mt-5">
         <Dashboard />
       </div>
     );
