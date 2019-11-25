@@ -15,13 +15,14 @@ class Dashboard extends Component {
   state = {
     inputs: [{ search: "", replace: "" }],
     textareaInput: "",
+    textareaHistory: [""],
+    savedParameters: [],
     changesApplied: 0
   };
 
   searchAndReplace = (searchArray, replaceArray) => {
     let { textareaInput: textarea } = this.state;
     let mapObj = _.object(searchArray, replaceArray);
-    console.log(mapObj);
     let counter = 0;
 
     let regularExp = new RegExp(Object.keys(mapObj).join("|"), "gi");
@@ -31,15 +32,30 @@ class Dashboard extends Component {
       return mapObj[matched];
     });
 
+    // Use _.isNaN(object) to avoid NaN display
     const resultsCounter = counter.length - 1;
 
     return [textarea, resultsCounter];
+  };
+
+  handleChange = e => {
+    if (["search", "replace"].includes(e.target.className)) {
+      let inputs = [...this.state.inputs];
+      inputs[e.target.dataset.id][e.target.className] = e.target.value;
+      this.setState({ inputs });
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
+    }
   };
 
   handleSubmit = e => {
     e.preventDefault();
 
     const inputs = { ...this.state.inputs };
+
+    // Save the textarea content before search & replace
+    this.state.textareaHistory.push(this.state.textareaInput);
+
     const searchArray = _.map(inputs, function(item) {
       return item.search;
     });
@@ -62,22 +78,10 @@ class Dashboard extends Component {
     }));
   };
 
-  handleChange = e => {
-    if (["search", "replace"].includes(e.target.className)) {
-      let inputs = [...this.state.inputs];
-      inputs[e.target.dataset.id][e.target.className] = e.target.value;
-      this.setState({ inputs });
-    } else {
-      this.setState({ [e.target.name]: e.target.value });
-    }
-  };
-
   handleAddButton = () => {
     this.setState({
       inputs: [...this.state.inputs, { search: "", replace: "" }]
     });
-
-    console.log("Total inputs", this.state.inputs);
   };
 
   handleDeleteButton = () => {
@@ -88,15 +92,51 @@ class Dashboard extends Component {
     this.setState({ inputs: filteredInputs });
   };
 
+  handleUndo = e => {
+    e.preventDefault();
+    let { textareaHistory } = this.state;
+    let lastElement = textareaHistory[textareaHistory.length - 1];
+
+    console.log(lastElement);
+
+    //?????????????
+    this.setState({
+      textareaInput: lastElement,
+      textareaHistory: textareaHistory.splice(-1, 1)
+    });
+  };
+
+  handleSave = index => {
+    let savedParameters = [...this.state.savedParameters];
+    const { inputs } = this.state;
+
+    // Make sure it doesn't save empty strings at the beginning
+    for (let key in inputs) {
+      if (inputs[key].search === "" && inputs[key].replace === "") return;
+    }
+
+    if (savedParameters.includes(inputs[index])) return;
+    savedParameters.push(inputs[index]);
+
+    this.setState({
+      savedParameters
+    });
+  };
+
   clearInputs = () => {
-    this.setState({ inputs: [{ search: "", replace: "" }], textareaInput: "" });
+    this.setState({
+      inputs: [{ search: "", replace: "" }],
+      textareaInput: "",
+      textareaHistory: []
+    });
   };
 
   render() {
     let { textareaInput, inputs } = this.state;
+    console.log("textarea inp", textareaInput);
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="row">
+        <div className="row align-items-start">
           <div className="col-3 main-column">
             <div className="row">
               <h4 className="column-heading">Search & Replace</h4>
@@ -112,12 +152,19 @@ class Dashboard extends Component {
               </div>
             </div>
             <div className="form-group ">
-              <FilterRow inputs={inputs} handleChange={this.handleChange} />
+              <FilterRow
+                inputs={inputs}
+                handleChange={this.handleChange}
+                handleSave={this.handleSave}
+              />
               <div className="row">
                 <button className="btn-sm btn-success btn find-replace-button">
                   Find & Replace <FontAwesomeIcon icon={faSearch} />
                 </button>
-                <button className="btn-sm btn-info btn find-replace-button">
+                <button
+                  onClick={this.handleUndo}
+                  className="btn-sm btn-info btn find-replace-button"
+                >
                   Undo <FontAwesomeIcon icon={faUndo} />
                 </button>
                 <button
@@ -144,7 +191,7 @@ class Dashboard extends Component {
             />
           </div>
           <div className="col-3 main-column">
-            <Recommends />
+            <Recommends toSaveParameters={this.state.savedParameters} />
           </div>
         </div>
       </form>

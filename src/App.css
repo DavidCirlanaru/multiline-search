@@ -11,8 +11,8 @@ html,
 body {
     width: 100%;
     margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #FAFAFA;
+    font-family: "Poppins", sans-serif;
+    background-color: #fafafa;
 }
 
 body {
@@ -21,7 +21,6 @@ body {
 
 #root {
     width: 100%;
-    padding: 0 20px;
 }
 
 .inputs-column {
@@ -35,16 +34,12 @@ body {
     margin: 0;
 }
 
-form {
-    width: 100%;
-}
-
 .main-row {
     flex-direction: row;
 }
 
 .find-replace-button {
-    margin: 2rem .5rem 0 .5rem;
+    margin: 2rem 0.5rem 0 0.5rem;
 }
 
 .main-column {
@@ -54,6 +49,11 @@ form {
     padding: 2em;
     max-height: 100%;
 }
+
+
+/* .history-items-container .row {
+    border-bottom: 1px solid var(--grayish-blue);
+} */
 
 
 /* Inputs */
@@ -162,10 +162,11 @@ form {
 /* Icons */
 
 .fa-plus-circle,
-.fa-minus-circle {
+.fa-minus-circle,
+.fa-archive {
     color: var(--grayish-blue);
-    transition: .5s;
-    margin: 0 .2rem;
+    transition: 0.5s;
+    margin: 0 0.2rem;
 }
 
 .col-1.plus-circle {
@@ -176,14 +177,78 @@ form {
 
 .fa-plus-circle:hover {
     cursor: pointer;
-    transition: .5s;
+    transition: 0.5s;
     color: var(--blue);
 }
 
 .fa-minus-circle:hover {
     cursor: pointer;
-    transition: .5s;
+    transition: 0.5s;
     color: var(--red);
+}
+
+.fa-archive:hover {
+    cursor: pointer;
+    transition: 0.5s;
+    color: turquoise;
+}
+
+
+/* Login */
+
+.login-form,
+.register-form {
+    width: 50%;
+}
+
+
+/* Users */
+
+.navbar-nav {
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.navbar-nav li {
+    margin: 0 1rem;
+}
+
+.navbar-dark .navbar-brand {
+    color: var(--blue);
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+.welcome-text {
+    margin: 0 1rem 0 0;
+    letter-spacing: 1.5px;
+    color: #fff;
+}
+
+.nav-user-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+svg.fa-sign-out-alt {
+    transition: 0.8s;
+    font-size: 20px;
+    color: var(--grayish-blue);
+    margin: auto 0;
+}
+
+svg.fa-sign-out-alt:hover {
+    transition: 0.8s;
+    color: var(--blue);
+    cursor: pointer;
 }
 
 

@@ -1,11 +1,19 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArchive } from "@fortawesome/free-solid-svg-icons";
 
 const filterRow = props => {
-  return props.inputs.map((val, idx) => {
-    let searchId = `Search-${idx}`;
-    let replaceId = `Replace-${idx}`;
+  // Why can't I declare arrow function?
+  function saveItem(index) {
+    props.handleSave(index);
+  }
+
+  return props.inputs.map((val, index) => {
+    let searchId = `Search-${index}`;
+    let replaceId = `Replace-${index}`;
+
     return (
-      <div key={idx} className="form-row align-items-center mt-4">
+      <div key={index} className="form-row align-items-center mt-4">
         {/* Search */}
         <div className="search-col col-5">
           <label htmlFor="inp" className="inp">
@@ -13,9 +21,9 @@ const filterRow = props => {
               onChange={props.handleChange}
               type="text"
               name={searchId}
-              data-id={idx}
+              data-id={index}
               id={searchId}
-              value={props.inputs[idx].search}
+              value={props.inputs[index].search}
               className="search"
               placeholder="&nbsp;"
             />
@@ -30,15 +38,18 @@ const filterRow = props => {
               onChange={props.handleChange}
               type="text"
               name={replaceId}
-              data-id={idx}
+              data-id={index}
               id={replaceId}
-              value={props.inputs[idx].replace}
+              value={props.inputs[index].replace}
               className="replace"
               placeholder="&nbsp;"
             />
             <span className="label">Replace</span>
             <span className="border"></span>
           </label>
+        </div>
+        <div className="col-2">
+          <FontAwesomeIcon icon={faArchive} onClick={() => saveItem(index)} />
         </div>
       </div>
     );
